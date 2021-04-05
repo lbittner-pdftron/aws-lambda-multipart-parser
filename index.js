@@ -41,8 +41,8 @@ module.exports.parse = (event, spotText) => {
     let content = tmp[1];
     const name = header.match(/name="([^"]+)"/)[1];
     const result = {};
-    result[name] = content;
-
+    
+    // if its a file
     if (header.indexOf('filename') !== -1) {
       const filename = header.match(/filename="([^"]+)"/)[1];
       const contentType = header.match(/Content-Type: (.+)/)[1];
@@ -57,6 +57,8 @@ module.exports.parse = (event, spotText) => {
         content: content,
         size: content.length
       };
+    } else {
+      result[name] = Buffer.from(content, 'binary').toString('utf8');
     }
     return result;
   })
